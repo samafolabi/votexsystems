@@ -10,16 +10,10 @@ const cookie = require('cookie-parser');
 var mongoUrl = "mongodb+srv://emperorsam:emperor2001@maincluster-rui0f.mongodb.net/votex";
 var db;
 const app = express();
-var forceSSL = function (req, res, next) {
-    if (req.headers['x-forwarded-proto'] !== 'https') {
-        return res.redirect(['https://', req.get('Host'), req.url].join(''));
-    }
-    return next();
-}
+
 
 var globalUser = '', globalVUser = '', globalVNum = -1;
 
-app.use(forceSSL);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(upload.array()); 
