@@ -241,7 +241,8 @@ app.post('/voting', function (req, res) {
 mongo.connect(mongoUrl, function (err, dbase) {
     if (err) throw err;
     db = dbase.db("votex");
-    app.listen(8000, function () {
-        console.log("Server running at port 8000");
+    var port = process.env.PORT || 8000;
+    app.listen(port, function () {
+        console.log("Server running at port "+port);
     });
 })
