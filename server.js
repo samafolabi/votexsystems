@@ -11,7 +11,6 @@ var mongoUrl = "mongodb+srv://emperorsam:emperor2001@maincluster-rui0f.mongodb.n
 var db;
 const app = express();
 
-
 var globalUser = '', globalVUser = '', globalVNum = -1;
 
 app.use(bodyParser.json());
@@ -243,6 +242,6 @@ mongo.connect(mongoUrl, function (err, dbase) {
     if (err) throw err;
     db = dbase.db("votex");
     app.listen(8000, function () {
-        console.log("Server running at port 8000"+process.env.NODE_ENV);
+        console.log("Server running at port 8000");
     });
 })
