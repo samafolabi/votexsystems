@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <base href="/">
+    <title>VoteX</title>
+    <link rel="stylesheet" href="css/libraries/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/libraries/jquery-ui.min.css" />
+    <script src="js/libraries/jquery-3.3.1.min.js"></script>
+    <script src="js/libraries/jquery-ui.min.js"></script>
+    <script src="js/libraries/angular.min.js"></script>
+    <script src="js/libraries/bootstrap.min.js"></script>
+</head>
+
+<body ng-app="votex">
+    <div ng-controller="Home">
+
+        <ul class="nav nav-tabs">
+            <li class="active">
+                <a data-toggle="tab" href="#login">Login</a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#signup">Signup</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="login" class="tab-pane fade in active">
+                    <form id="logf" onsubmit="logsup();">
+                        <label for="user">Username:</label>
+                        <input required name="user" type="text" /><br />
+                        
+                        <label for="pass">Password:</label>
+                        <input required name="pass" type="password" /><br />
+                        
+                        <input id="logs" type="submit" />
+                    </form>
+            </div>
+            <div id="signup" class="tab-pane fade in">
+                    <form id="signf" onsubmit="signsup();">
+                        <p>Account Version: </p>
+                        <input ng-checked="true" ng-model="acctv" name="acctv" type="radio" value="org" />
+                        Organization<br />
+                        <input ng-model="acctv" name="acctv" type="radio" value="per" />
+                        Personal<br />
+            
+                        <div ng-show="acctv == 'org'">
+                            <label for="orgname">Organization Name: </label>
+                            <input ng-required="acctv == 'org'" name="orgname" type="text" /><br />
+                        </div>
+            
+                        <div ng-show="acctv == 'per'">
+                            <label for="fname">First Name: </label>
+                            <input ng-required="acctv == 'per'" name="fname" type="text" /><br />
+                            
+                            <label for="lname">Last Name: </label>
+                            <input ng-required="acctv == 'per'" name="lname" type="text" /><br />
+                        </div>
+                        
+                        <label for="email">Email Address: </label>
+                        <input required id="email" name="email" type="email" /><br />
+                        
+                        <label for="cemail">Confirm Email Address: </label>
+                        <input required id="cemail" name="cemail" type="email" /><br />
+                        
+                        <label for="uname">Username: </label>
+                        <input required name="uname" type="text" /><br />
+                        
+                        <label for="pword">Password: </label>
+                        <input required id="pword" name="pword" type="password" /><br />
+                        
+                        <label for="cpword">Confirm Password: </label>
+                        <input required id="cpword" name="cpword" type="password" /><br />
+            
+                        <input id="signs" type="submit" />
+                    </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/index.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/controllers/Home.js"></script>
+</body>
+
+</html>
