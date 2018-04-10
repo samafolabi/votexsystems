@@ -1,8 +1,12 @@
 {
-  "name": "votex",
+  "name": "votexsystems",
   "version": "1.0.0",
   "description": "Voting System",
-  "main": "index.js", "engines": { "node": "8.9.4" }, "scripts": {
+  "main": "index.js",
+  "engines": {
+    "node": "8.9.4"
+  }, 
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
   },
@@ -14,5 +18,9 @@
     "express": "^4.16.3",
     "mongodb": "^3.0.5",
     "multer": "^1.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/samafolabi/votexsystems.git"
   }
 }
