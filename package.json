@@ -4,7 +4,7 @@
   "description": "Voting System",
   "main": "index.js", "engines": { "node": "8.9.4" }, "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "./start.sh"
   },
   "author": "Samson Afolabi",
   "license": "ISC",
