@@ -7,7 +7,7 @@ const upload = multer();
 const bcrypt = require("bcrypt");
 const cookie = require('cookie-parser');
 
-var mongoUrl = "mongodb://localhost:27017/";
+var mongoUrl = "mongodb+srv://emperorsam:emperor2001@maincluster-rui0f.mongodb.net/votex";
 var db;
 const app = express();
 
