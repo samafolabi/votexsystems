@@ -1,5 +1,7 @@
 app.controller("Vote", function ($scope) {
     $scope.obj = {};
+
+
     $scope.init = function () {
         var path = (window.location.pathname + '/').slice(6);
         var user = path.slice(0, path.indexOf('/'));
@@ -8,8 +10,18 @@ app.controller("Vote", function ($scope) {
 
         ajax('/votex/'+user+'/'+system, "", function (res) {
             var obj = JSON.parse(res);
-            $scope.sysname = obj.name;
+            var months = ["January", "February", "March",
+            "April", "May", "June", "July", "August",
+            "September", "October", "November", "December"];
+            var d = new Date(obj.activeDate);
+            var date = months[d.getMonth()] + " " +d.getDate() +
+                       ", " + d.getFullYear() + ", " + ("0" + d.getHours()).slice(-2)
+                       + ":" + ("0" + d.getMinutes()).slice(-2);
+            $scope.name = obj.name;
+            $scope.sysname = obj.sysname;
             $scope.obj = obj.candidates;
+            $scope.status = obj.status;
+            $scope.activeDate = date;
             $scope.$apply()
         })
     }
@@ -29,8 +41,15 @@ app.controller("Vote", function ($scope) {
     }
 
     $scope.vote = function () {
-        ajax('voting', radioVal(), function (res) {
-            window.location = '/';
-        })
+        $.getJSON('https://json.geoiplookup.io/api?callback=?', function(data) {
+            ajax('voting?ip='+data.ip, radioVal(), function (res) {
+                if (res == "false") {
+                    alert("You cannot vote again.")
+                } else {
+                    window.location = '/';
+                }
+            })
+        });
+        
     }
 });

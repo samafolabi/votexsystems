@@ -3,31 +3,41 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="css/libraries/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/libraries/jquery-ui.min.css" />
-    <script src="js/libraries/jquery-3.3.1.min.js"></script>
-    <script src="js/libraries/jquery-ui.min.js"></script>
-    <script src="js/libraries/angular.min.js"></script>
-    <script src="js/libraries/bootstrap.min.js"></script>
+    <title>VoteX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body ng-app="votex">
+<body ng-app="votex" style="background-color:#3f3f3f;">
+    <img src="img/VoteX.png">
     <div ng-controller="Vote" ng-init="init()">
-        <h2>Vote</h2>
-        <h3>{{sysname}}</h3>
-
-        <form id="votef" onsubmit="return false;">
-            <span ng-repeat="(key, val) in obj">
-                <input type="radio" name="vote" value="{{key}}" />
-                {{key}}: {{val}}<br />
-            </span>
-
-            <input type="submit" ng-click="vote();" />
+        <div style="color:#000000;display:inline-block;">
+            <h1 class="text-center">{{sysname}}</h1>
+            <h4 class="text-right">by {{name}}</h4>
+        </div>
+        <p ng-show="status == 1">:( I'm sorry, but this contest is not active yet.<br/>
+            It will come online on {{activeDate}}</p>
+        <p ng-show="status == -1">:( I'm sorry, but this contest has closed.</p>
+        <form id="votef" onsubmit="return false;" ng-show="status == 0">
+            <div class="form-group">
+                <div ng-repeat="(key, val) in obj" class="radio">
+                    <label class="control-label" for="vote">
+                        <input type="radio" name="vote" value="{{key}}" required>
+                        <span style="font-weight: bold;">{{key}}</span>: {{val}}
+                    </label>
+                </div>
+            </div>
+            <button class="btn btn-success" type="submit" ng-click="vote();">Submit</button>
         </form>
     </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script src="js/index.js"></script>
     <script src="js/app.js"></script>

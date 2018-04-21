@@ -3,101 +3,188 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="css/libraries/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/libraries/jquery-ui.min.css" />
-    <script src="js/libraries/jquery-3.3.1.min.js"></script>
-    <script src="js/libraries/jquery-ui.min.js"></script>
-    <script src="js/libraries/angular.min.js"></script>
-    <script src="js/libraries/bootstrap.min.js"></script>
+    <title>VoteX</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body ng-app="votex">
+<body ng-app="votex" style="background-color:#3f3f3f;">
+    <img src="img/VoteX.png">
+    <p onclick="logout()" id="logout">Log Out</p>
     <div ng-controller="Dboard" ng-init="init()">
-        <h2>Dashboard</h2>
-        <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#profile">Profile</a></li>
-            <li><a data-toggle="tab" href="#systems">Voting Systems</a></li>
-        </ul>
-              
-        <div class="tab-content">
-            <div id="systems" class="tab-pane fade">
-                <button data-toggle="modal" data-target="#sysmodal"
-                id="createsys">Create System</button>
-                <ul>
-                    <li ng-repeat="x in sys">
-                        {{x}}
-                    </li>
-                </ul>
-            </div>
-            <div id="profile" class="tab-pane fade in active">
-                <ul style="list-style-type: none;">
-                    <li ng-repeat="(key, val) in obj">
-                        <span style="font-weight: bold">{{key}}</span>
-                        : {{val}}
-                    </li>
-                </ul>
+
+        <div>
+
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active"><a href="#tab-1" role="tab" data-toggle="tab">VOTING SYSTEMS</a></li>
+                <li><a href="#tab-2" role="tab" data-toggle="tab">PROFILE </a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" role="tabpanel" id="tab-1">
+                    <form class="form-horizontal">
+                        <button ng-click="delCreEdit = 0" class="btn btn-success" type="button" id="createsys" data-toggle="modal" data-target="#sysmodal">Create System</button>
+                        <div ng-repeat="x in sys" class="form-group">
+                            <label class="control-label col-sm-4">{{x}}</label>
+                            <div class="btn-group" role="group">
+                                <button ng-click="editSystem($event)" data-toggle="modal" data-target="#sysmodal" class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button>
+                                <button ng-click="delSystem($event)" class="btn btn-default" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="tab-pane" role="tabpanel" id="tab-2">
+                    <form class="form-horizontal">
+                        <div ng-repeat="(key, val) in obj" class="form-group">
+                            <label class="control-label col-sm-4">{{titles[$index]}}</label>
+                            <div class="col-sm-6 input-group">
+                                <p>{{val}}</p>
+                                <input style="display:none" class="form-control" type="text" name="{{key}}" id="{{key}}">
+                                <div class="input-group-btn">
+                                    <button ng-click="proEdit($event)" class="btn btn-default" type="button">
+                                        <i class="glyphicon glyphicon-pencil"></i>
+                                    </button>
+                                    <button style="display:none" ng-click="pEdit($event)" class="btn btn-default" type="button">
+                                        <i class="glyphicon glyphicon-ok"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
-        <div id="sysmodal" class="modal fade" role="dialog">
-            <div class="modal-dialog">
-        
+        <div class="modal fade" role="dialog" tabindex="-1" id="sysmodal">
+            <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Create a Voting System</h4>
-                    </div>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><i class="glyphicon glyphicon-remove"></i></button>
+                        <h4 class="modal-title">Voting System Settings</h4></div>
                     <div class="modal-body">
-                        <form onsubmit="return false;" id="sysform">
+                        <form ng-show="delCreEdit == 0" id="sysform" onsubmit="return false;" class="form-horizontal">
                             <div id="info">
-                                <label for="sysname">Name: </label>
-                                <input required type="text" name="sysname" id="sysname" />
-
-                                <label for="sysdes">Description: </label>
-                                <textarea maxlength="300" name="sysdes" id="sysdes"></textarea>
-
-                                <label for="syssdate">Start Date: </label>
-                                <input value="2018-04-03" type="date" name="syssdate" id="syssdate" />
-
-                                <label for="sysstime">Start Time: </label>
-                                <input value="00:00" type="time" name="sysstime" id="sysstime" />
-
-                                <label for="syscdate">Close Date: </label>
-                                <input value="2018-04-03" type="date" name="syscdate" id="syscdate" />
-
-                                <label for="sysctime">Close Time: </label>
-                                <input value="00:00" type="time" name="sysctime" id="sysctime" />
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysname">Name </label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" type="text" name="sysname" required placeholder="Name" id="sysname">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysdes">Description </label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" name="sysdes" required placeholder="Description" maxlength="300" id="sysdes"></textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysstart">Start Date/Time</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" type="datetime-local" name="sysstart" required id="sysstart">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysclose">Close Date/Time</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" type="datetime-local" name="sysclose" required id="sysclose">
+                                    </div>
+                                </div>
                             </div>
-                            <div style="display: none;" id="cands">
-                                <button ng-click="addv();"><h3>+</h3></button>
-                                
+                            <div id="cands" style="display:none;">
+                                <button ng-click="addv();" class="btn btn-warning" type="button"> <i class="glyphicon glyphicon-plus"></i></button>
                                 <ol id="ol">
                                     <li>
-                                        <input type="text" placeholder="Name of Candidate" name="candi1" id="candi1" />
-                                        <textarea placeholder="Description" maxlength="300" name="candt1" id="candt1"></textarea>
+                                        <div class="input-group">
+                                            <input class="form-control" required type="text" placeholder="Name of Candidate" name="candi1" id="candi1" />
+                                            <div class="input-group-btn">
+                                                <button style="display:none" class="btn btn-default cand-btn" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+                                            </div>
+                                        </div>
+                                        <textarea class="form-control" required placeholder="Description" maxlength="300" name="candt1" id="candt1"></textarea>
+                                    </li>
+                                    <li>
+                                        <div class="input-group">
+                                            <input class="form-control" required type="text" placeholder="Name of Candidate" />
+                                            <div class="input-group-btn">
+                                                <button style="display:none" class="cand-btn btn btn-default" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+                                            </div>
+                                        </div>
+                                        <textarea class="form-control" required placeholder="Description" maxlength="300"></textarea>
                                     </li>
                                 </ol>
                             </div>
+                        </form>
 
-                            <button id="nex" ng-click="next();">Next &gt;</button>
-                            <button id="bac" style="display:none;" ng-click="back();">&lt; Back</button>
-                                                        
-                            <input id="syssub" style="display:none;" ng-click="createsys();" type="submit" data-dismiss="modal" />
+                        <form ng-hide="delCreEdit == 0" id="syseform" onsubmit="return false;" class="form-horizontal">
+                            <div id="infoE">
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysname">Name </label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" type="text" value="{{sysEData.name}}" name="sysname" required placeholder="Name" id="sysname">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysdes">Description </label>
+                                    <div class="col-sm-6">
+                                        <textarea class="form-control" name="sysdes" required placeholder="Description" maxlength="300" id="sysdes">{{sysEData.des}}</textarea>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysstart">Start Date/Time</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" type="datetime-local" name="sysstart" required id="sysstart">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="control-label col-sm-4" for="sysclose">Close Date/Time</label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" type="datetime-local" name="sysclose" required id="sysclose">
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="candsE" style="display:none;">
+                                <button ng-click="addvE();" class="btn btn-warning" type="button"> <i class="glyphicon glyphicon-plus"></i></button>
+                                <ol id="olE">
+                                    <li ng-repeat="(key, val) in sysECands">
+                                        <div class="input-group">
+                                            <input class="form-control" required value="{{key}}" type="text" placeholder="Name of Candidate" />
+                                            <div class="input-group-btn">
+                                                <button class="cand-btn-e btn btn-default" type="button"><i class="glyphicon glyphicon-remove"></i></button>
+                                            </div>
+                                        </div>
+                                        <textarea class="form-control" required placeholder="Description" maxlength="300">{{val}}</textarea>
+                                    </li>
+                                </ol>
+                            </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <div ng-show="delCreEdit == 0">
+                            <button class="btn btn-success" type="button" ng-click="next()" id="nex">Next </button>
+                            <button class="btn btn-warning" type="button" ng-click="back()" id="bac" style="display:none">Back</button>
+                            <button class="btn btn-success" type="button" ng-click="createsys()" id="syssub" style="display:none" data-dismiss="modal">Submit </button>
+                        </div>
+
+                        <div ng-show="delCreEdit == 1">
+                            <button class="btn btn-success" type="button" ng-click="next1()" id="nex1">Next </button>
+                            <button class="btn btn-warning" type="button" ng-click="back1()" id="bac1" style="display:none">Back</button>
+                            <button class="btn btn-success" type="button" ng-click="editsys()" id="syssub1" style="display:none" data-dismiss="modal">Submit </button>
+                        </div>
                     </div>
                 </div>
-        
             </div>
         </div>
-
-
     </div>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script src="js/index.js"></script>
     <script src="js/app.js"></script>

@@ -7,7 +7,7 @@ const upload = multer();
 const bcrypt = require("bcrypt");
 const cookie = require('cookie-parser');
 
-var mongoUrl = "mongodb+srv://emperorsam:emperor2001@maincluster-rui0f.mongodb.net/votex";
+var mongoUrl = "mongodb://localhost:27017/";
 var db;
 const app = express();
 
@@ -40,7 +40,7 @@ function errFunc(err, res) {
 app.post('/signup', function (req, res) {
     db.collection("users").findOne(
     {$or: [{email: req.body.email},
-    {uname: req.body.uname}]}, function (err, result) {
+    {uname: req.body.uname.toLowerCase()}]}, function (err, result) {
         if (err) errFunc();
         if (result) {
             res.write("false");
@@ -54,14 +54,14 @@ app.post('/signup', function (req, res) {
                     fname: req.body.fname,
                     lname: req.body.lname,
                     email: req.body.email,
-                    uname: req.body.uname,
+                    uname: req.body.uname.toLowerCase(),
                     pword: hash,
                     systems: []
                 };
                 db.collection("users").insertOne(newuser, function (err, resultt) {
                     if (err) errFunc();
-                    globalUser = req.body.uname;
-                    res.write(req.body.uname);
+                    globalUser = req.body.uname.toLowerCase();
+                    res.write(req.body.uname.toLowerCase());
                     res.end();
                 })
             })
@@ -70,7 +70,7 @@ app.post('/signup', function (req, res) {
 });
 
 app.post('/login', function (req, res) {
-    var uname = req.body.user;
+    var uname = req.body.user.toLowerCase();
     var pword = req.body.pass;
     var users = db.collection("users").findOne({uname: uname},
     {uname: 1, pword: 1}, function (err, result) {
@@ -126,10 +126,26 @@ function getCookie(name, cookie) {
 }
 
 app.post("/prosys", function (req, res) {
-    db.collection("users").findOne({uname: globalUser},
-    {pword: 0, _id: 0}, function (err, data) {
+    db.collection("users")
+    .find({uname: globalUser})
+    .project({_id:0, pword:0}).toArray(
+        function (err, data) {
+            if (err) errFunc(err, res);
+            res.write(JSON.stringify(data[0]));
+            res.end();
+        }
+    );
+})
+
+app.post("/editprofile", function (req, res) {
+    //var id = req.body.keys()[0];
+    //var text = req.body[""+id];
+    var update = {$set: {}};
+    update.$set[Object.keys(req.body)[0]] = req.body[[Object.keys(req.body)[0]]];
+    db.collection("users").updateOne({uname: req.query.uname},
+    update, function(err, data) {
         if (err) errFunc(err, res);
-        res.write(JSON.stringify(data));
+        res.write(JSON.stringify(req.body));
         res.end();
     })
 })
@@ -157,20 +173,68 @@ app.post("/createsys", function (req, res) {
 
     var newsys = {
         name: req.body.sysname,
-        status: 1,
-        createdate: new Date().toUTCString(),
+        //status: 1,
+        //createdate: new Date().toUTCString(),
         des: req.body.sysdes,
-        start: convertToFormat(req.body.syssdate, req.body.sysstime, req.query.offset),
-        close: convertToFormat(req.body.syscdate, req.body.sysctime, req.query.offset),
+        start: req.body.sysstart, //convertToFormat(req.body.syssdate, req.body.sysstime, req.query.offset),
+        close: req.body.sysclose,//convertToFormat(req.body.syscdate, req.body.sysctime, req.query.offset),
         candidates: cands,
-        votes: votes
+        votes: votes,
+        voters: []
     }
     var update = {$push: {systems: newsys}}
     db.collection("users").updateOne({uname: globalUser},
     update, function (err, data) {
         if (err) errFunc(err, res);
         db.collection("users").findOne({uname: globalUser},
-            {pword: 0, _id: 0}, function (err, data) {
+            {systems: 1}, function (err, data) {
+                if (err) errFunc(err, res);
+                res.write(JSON.stringify(data));
+                res.end();
+            })
+    })
+})
+
+app.post("/editsys", function (req, res) {
+    var candnum = parseInt(req.query.candnum);
+    var cands = {};
+    var votes = {};
+    for (i = 1; i <= candnum; i++) {
+        cands[req.body["candi"+i]] = req.body["candt"+1];
+        votes[req.body["candi"+i]] = 0;
+    }
+
+    var newsys = {
+        name: req.body.sysname,
+        des: req.body.sysdes,
+        start: req.body.sysstart, //convertToFormat(req.body.syssdate, req.body.sysstime, req.query.offset),
+        close: req.body.sysclose,//convertToFormat(req.body.syscdate, req.body.sysctime, req.query.offset),
+        candidates: cands,
+        votes: votes,
+        voters: []
+    }
+    var update = {$set: {}};
+    update.$set["systems."+req.query.i] = newsys;
+    db.collection("users").updateOne({uname: globalUser},
+    update, function (err, data) {
+        if (err) errFunc(err, res);
+        db.collection("users").findOne({uname: globalUser},
+            {systems: 1}, function (err, data) {
+                if (err) errFunc(err, res);
+                res.write(JSON.stringify(data));
+                res.end();
+            })
+    })
+})
+
+app.post("/delsys", function (req, res) {
+    var update = {$pull: {systems: {name: ""}}};
+    update.$pull.systems.name = req.query.text;
+    db.collection("users").updateOne({uname: globalUser},
+    update, function (err, data) {
+        if (err) errFunc(err, res);
+        db.collection("users").findOne({uname: globalUser},
+            {systems: 1}, function (err, data) {
                 if (err) errFunc(err, res);
                 res.write(JSON.stringify(data));
                 res.end();
@@ -192,21 +256,36 @@ app.use('/vote/:user/:system', function (req, res) {
 })
 
 app.post('/votex/:user/:system', function (req, res) {
-    var user = req.params.user;
+    var user = req.params.user.toLowerCase();
     var system = req.params.system;
     var name = "";
 
-    db.collection("users").findOne({uname: user},
+    db.collection("users").findOne({uname: user}, {uname:0, _id:0, pword:0},
     function(err, result1) {
         if (err) errFunc(err, res);
         if (result1) {
-            name = (result1.acctv == "org") ? result1.orgname : result1.fname + result1.lname;
+            name = (result1.acctv == "org") ? result1.orgname : result1.fname + " " + result1.lname;
             var systems = result1.systems.slice();
             for (i = 0; i < systems.length; i++) {
-                if (systems[i].name == system) {
+                if (systems[i].name.toLowerCase() == system.toLowerCase()) {
                     globalVUser = user;
                     globalVNum = i;
-                    var obj = {name: name, candidates: systems[i].candidates};
+                    var status = 1;
+                    var today = new Date();
+                    if (new Date(systems[i].start) < today) {
+                        if (new Date(systems[i].close) < today) {
+                            status = -1;
+                        } else {
+                            status = 0;
+                        }
+                    } else {
+                        status = 1;
+                    }
+                    var obj = {name: name,
+                        sysname: systems[i].name,
+                        candidates: systems[i].candidates,
+                        status: status,
+                        activeDate: systems[i].start};
                     res.write(JSON.stringify(obj));
                     res.end();
                     break;
@@ -218,30 +297,36 @@ app.post('/votex/:user/:system', function (req, res) {
 
 app.post('/voting', function (req, res) {
     var body = Object.keys(req.body)[0];
-    var update = {"$inc":{"":""}};
-    update["$inc"]["systems."+globalVNum+".votes."+body] = 1;
+
+    db.collection("users").findOne({uname: globalVUser}, {systems:1},
+        function (err, data) {
+            if (err) errFunc(err, res);
+            var voters = data.systems[globalVNum].voters.slice();
+            if (voters.indexOf(req.query.ip) > -1) {
+                res.write("false");
+                res.end();
+            } else {
+                var update = data.systems.slice();
+                update[globalVNum].voters.push(req.query.ip);
+                update[globalVNum].votes[body]++;
+                db.collection("users").updateOne({uname: globalVUser},
+                    {$set:{'systems': update}}, function (err, data) {
+                        if (err) errFunc(err, res);
+                        res.write("true");
+                        res.end();
+                })
+            }
+        })
     
-    db.collection("users").updateOne({uname: globalVUser},
-        update, function (err, data) {
-        if (err) errFunc(err, res);
-        res.write("true");
-        res.end();
-    })
+    //errFunc, system, lowercase, data, create, list, ip address one time vote
 })
-
-
-
-
-/*app.use('*', function(req, res){
-    res.send('Sorry, this is an invalid URL.');
-});*/
 
 
 
 mongo.connect(mongoUrl, function (err, dbase) {
     if (err) throw err;
     db = dbase.db("votex");
-    var port = process.env.PORT || 8000;
+    var port = process.env.PORT || 443;
     app.listen(port, function () {
         console.log("Server running at port "+port);
     });

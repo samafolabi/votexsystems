@@ -1,0 +1,47 @@
+.nav-tabs.nav-justified > li:not(.active) {
+  background-color:#ed7d31;
+  color:#fff;
+}
+/*body > div {
+  text-align: center;
+ position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -o-transform: translateY(-50%);
+  -webkit-transform: translateY(-50%);
+  transform: translateY(-50%);
+    margin: 0 auto;
+    border-radius: 0.35em;
+    left: 0;
+    right: 0;
+}*/
+
+body > img {
+  width:20%;
+  height:20%;
+}
+
+body > div {
+  width:80%;
+  margin:0 auto;
+  border-radius:2em;
+  padding:1em;
+  background-color:#ffffff;
+}
+
+#logout {
+  position: absolute;
+  text-align: right;
+  color: white;
+}
+
+#logout:hover {
+  cursor: pointer;
+  color: rgb(67, 166, 212);
+}
+
+#logout:active {
+  cursor: pointer;
+  color: rgb(252, 8, 8);
+}

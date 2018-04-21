@@ -3,83 +3,132 @@
 
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
     <title>VoteX</title>
-    <link rel="stylesheet" href="css/libraries/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/libraries/jquery-ui.min.css" />
-    <script src="js/libraries/jquery-3.3.1.min.js"></script>
-    <script src="js/libraries/jquery-ui.min.js"></script>
-    <script src="js/libraries/angular.min.js"></script>
-    <script src="js/libraries/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
-<body ng-app="votex">
-    <div ng-controller="Home">
+<body ng-app="votex" style="background-color:#3f3f3f;">
+    <img src="img/VoteX.png">
+    <div ng-controller="Home" ng-init="init()">
+        <div>
 
-        <ul class="nav nav-tabs">
-            <li class="active">
-                <a data-toggle="tab" href="#login">Login</a>
-            </li>
-            <li>
-                <a data-toggle="tab" href="#signup">Signup</a>
-            </li>
-        </ul>
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active"><a href="#tab-1" role="tab" data-toggle="tab">LOGIN</a></li>
+                <li><a href="#tab-2" role="tab" data-toggle="tab">SIGNUP</a></li>
+            </ul>
 
-        <div class="tab-content">
-            <div id="login" class="tab-pane fade in active">
-                    <form id="logf" onsubmit="logsup();">
-                        <label for="user">Username:</label>
-                        <input required name="user" type="text" /><br />
+            <div class="tab-content">
+                <div class="tab-pane active" role="tabpanel" id="tab-1">
+                    <form id="logf" onsubmit="logsup();" class="form-horizontal">
                         
-                        <label for="pass">Password:</label>
-                        <input required name="pass" type="password" /><br />
-                        
-                        <input id="logs" type="submit" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="user">Username</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="user" required placeholder="Username" minlength="6" id="user">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="pass">Password </label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="password" name="pass" required placeholder="Password" minlength="6">
+                            </div>
+                        </div>
+
+                        <button id="logs" class="btn btn-success" type="submit">Submit </button>
                     </form>
-            </div>
-            <div id="signup" class="tab-pane fade in">
-                    <form id="signf" onsubmit="signsup();">
-                        <p>Account Version: </p>
-                        <input ng-checked="true" ng-model="acctv" name="acctv" type="radio" value="org" />
-                        Organization<br />
-                        <input ng-model="acctv" name="acctv" type="radio" value="per" />
-                        Personal<br />
-            
+                </div>
+
+                <div class="tab-pane" role="tabpanel" id="tab-2">
+                    <form id="signf" onsubmit="signsup();" class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-4">
+                                <div class="radio">
+                                    <label class="control-label">
+                                        <input type="radio" ng-model="acctv" name="acctv" value="org" required checked="" ng-checked="true">Organization</label>
+                                </div>
+                                <div class="radio">
+                                    <label class="control-label">
+                                        <input type="radio" ng-model="acctv" name="acctv" value="per" required>Personal</label>
+                                </div>
+                            </div>
+                        </div>
+
                         <div ng-show="acctv == 'org'">
-                            <label for="orgname">Organization Name: </label>
-                            <input ng-required="acctv == 'org'" name="orgname" type="text" /><br />
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="orgname">Organization Name</label>
+                                <div class="col-sm-6">
+                                    <input class="form-control" ng-required="acctv == 'org'" type="text" name="orgname" placeholder="Organization Name" id="orgname">
+                                </div>
+                            </div>
                         </div>
-            
+
                         <div ng-show="acctv == 'per'">
-                            <label for="fname">First Name: </label>
-                            <input ng-required="acctv == 'per'" name="fname" type="text" /><br />
-                            
-                            <label for="lname">Last Name: </label>
-                            <input ng-required="acctv == 'per'" name="lname" type="text" /><br />
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="fname">First Name</label>
+                                <div class="col-sm-6">
+                                    <input class="form-control" ng-required="acctv == 'per'" type="text" name="fname" placeholder="First Name" id="fname">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-sm-4" for="lname">Last Name</label>
+                                <div class="col-sm-6">
+                                    <input class="form-control" ng-required="acctv == 'per'" type="text" name="lname" placeholder="Last Name" id="lname">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="email">Email Address</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="email" name="email" required placeholder="Email Address" id="email">
+                            </div>
                         </div>
                         
-                        <label for="email">Email Address: </label>
-                        <input required id="email" name="email" type="email" /><br />
-                        
-                        <label for="cemail">Confirm Email Address: </label>
-                        <input required id="cemail" name="cemail" type="email" /><br />
-                        
-                        <label for="uname">Username: </label>
-                        <input required name="uname" type="text" /><br />
-                        
-                        <label for="pword">Password: </label>
-                        <input required id="pword" name="pword" type="password" /><br />
-                        
-                        <label for="cpword">Confirm Password: </label>
-                        <input required id="cpword" name="cpword" type="password" /><br />
-            
-                        <input id="signs" type="submit" />
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="cemail">Confirm Email Address</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="email" name="cemail" required placeholder="Confirm Email Address" id="cemail">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="uname">Username</label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="text" name="uname" required placeholder="Username" minlength="6" id="uname">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="pword">Password </label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="password" name="pword" required placeholder="Password" minlength="6" id="pword">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label col-sm-4" for="cpword">Confirm Password </label>
+                            <div class="col-sm-6">
+                                <input class="form-control" type="password" name="cpword" required placeholder="Confirm Password" minlength="6" id="cpword">
+                            </div>
+                        </div>
+
+                        <button id="signs" class="btn btn-success" type="submit">Submit </button>
                     </form>
+                </div>
             </div>
         </div>
     </div>
-    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
     <script src="js/index.js"></script>
     <script src="js/app.js"></script>
     <script src="js/controllers/Home.js"></script>
