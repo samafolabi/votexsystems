@@ -52,7 +52,9 @@ app.controller("Dboard", function ($scope) {
                 d1.getTime() > start.getTime()) {
                 $scope.results = 1;
                 $scope.res = $scope.systems[i].voternames.slice();
+                $("#resmodal").modal();
             } else { $scope.results = 0; }
+            $("#resmodal").modal();
         }
     }
 
