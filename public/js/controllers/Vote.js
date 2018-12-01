@@ -42,7 +42,8 @@ app.controller("Vote", function ($scope) {
 
     $scope.vote = function () {
         $.getJSON('https://json.geoiplookup.io/api?callback=?', function(data) {
-            ajax('voting?ip='+data.ip, radioVal(), function (res) {
+            ajax('voting?ip='+data.ip+'&voter='+document.getElementById("voter").value,
+            radioVal(), function (res) {
                 if (res == "false") {
                     alert("You cannot vote again.")
                 } else {

@@ -33,6 +33,7 @@
                                 <button ng-click="editSystem($event)" data-toggle="modal" data-target="#sysmodal" class="btn btn-default" type="button"><i class="glyphicon glyphicon-pencil"></i></button>
                                 <button ng-click="delSystem($event)" class="btn btn-default" type="button"><i class="glyphicon glyphicon-remove"></i></button>
                             </div>
+                            <a ng-click="showResults($event)" id="results">Results</a>
                         </div>
                     </form>
                 </div>
@@ -177,6 +178,30 @@
                 </div>
             </div>
         </div>
+
+        <div id="resmodal" class="modal fade" role="dialog">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal">&times;</button>
+                  <h4 class="modal-title">Results</h4>
+                </div>
+                <div class="modal-body">
+                    <ol ng-show="results == 1">
+                        <li ng-repeat="x in res">{{x}}</li>
+                    </ol>
+
+                    <p ng-show="results == 0">
+                        The contest has not begun yet.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+              </div>
+          
+            </div>
+          </div>
     </div>
 
     

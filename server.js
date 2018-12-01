@@ -180,6 +180,7 @@ app.post("/createsys", function (req, res) {
         close: req.body.sysclose,//convertToFormat(req.body.syscdate, req.body.sysctime, req.query.offset),
         candidates: cands,
         votes: votes,
+        voternames: [],
         voters: []
     }
     var update = {$push: {systems: newsys}}
@@ -211,6 +212,7 @@ app.post("/editsys", function (req, res) {
         close: req.body.sysclose,//convertToFormat(req.body.syscdate, req.body.sysctime, req.query.offset),
         candidates: cands,
         votes: votes,
+        voternames: [],
         voters: []
     }
     var update = {$set: {}};
@@ -308,6 +310,7 @@ app.post('/voting', function (req, res) {
             } else {
                 var update = data.systems.slice();
                 update[globalVNum].voters.push(req.query.ip);
+                update[globalVNum].voternames.push(req.query.voter);
                 update[globalVNum].votes[body]++;
                 db.collection("users").updateOne({uname: globalVUser},
                     {$set:{'systems': update}}, function (err, data) {

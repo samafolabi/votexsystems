@@ -6,6 +6,8 @@ app.controller("Dboard", function ($scope) {
     $scope.sysECands = {};
     $scope.eNum = -1;
     $scope.delCreEdit = 0;
+    $scope.results = 0;
+    $scope.res = [];
     $scope.init = function () {
         if (getCookie("uname", document.cookie) == undefined) {
             window.location = "/";
@@ -38,6 +40,21 @@ app.controller("Dboard", function ($scope) {
             $scope.$apply();
         })
     };
+
+    $scope.results = function (e) {
+        var element = angular.element(e.currentTarget) || angular.element(e.srcElement);
+        var text = $(element).siblings("label").html();
+        for (i = 0; i < $scope.systems.length; i++) {
+            var start = new Date($scope.systems[i].start);
+            var d1 = new Date();
+            var res;
+            if ($scope.systems[i].name == text &
+                d1.getTime() > start.getTime()) {
+                $scope.results = 1;
+                $scope.res = $scope.systems[i].voternames.slice();
+            } else { $scope.results = 0; }
+        }
+    }
 
     $scope.proEdit = function (e) {
         var element = angular.element(e.currentTarget) || angular.element(e.srcElement);
