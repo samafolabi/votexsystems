@@ -41,7 +41,7 @@ app.controller("Dboard", function ($scope) {
         })
     };
 
-    $scope.results = function (e) {
+    $scope.showResults = function (e) {
         var element = angular.element(e.currentTarget) || angular.element(e.srcElement);
         var text = $(element).siblings("label").html();
         for (i = 0; i < $scope.systems.length; i++) {

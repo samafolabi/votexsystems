@@ -45,3 +45,7 @@ body > div {
   cursor: pointer;
   color: rgb(252, 8, 8);
 }
+
+#results {
+  cursor: pointer;
+}
